@@ -1,0 +1,13 @@
+{
+  "code": "INPUT_VALIDATION_FAILED",
+  "fieldErrors": [
+    {
+      "code": "SEARCH_PERIOD_TOO_LARGE",
+      "field": "date"
+    },
+    {
+      "code": "DATE_TO_NOT_FULL_HOUR",
+      "field": "dateTo"
+    }
+  ]
+}

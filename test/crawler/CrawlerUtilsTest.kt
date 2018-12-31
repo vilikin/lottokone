@@ -12,7 +12,7 @@ class CrawlerUtilsTest {
     @Test
     fun shouldGetMillisecondsOfLocalDate() {
         val date = LocalDate.of(2018, 12, 23)
-        val actualMilliseconds = date.getMillisecondsSinceEpoch()
+        val actualMilliseconds = localDateToEpochMilliseconds(date)
         assertEquals(1545523200000, actualMilliseconds)
     }
 

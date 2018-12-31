@@ -1,11 +1,12 @@
 package com.example.crawler
 
-import java.time.DayOfWeek
-import java.time.LocalDate
-import java.time.ZoneOffset
+import java.time.*
 
-fun LocalDate.getMillisecondsSinceEpoch() =
-    this.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000
+fun localDateToEpochMilliseconds(localDate: LocalDate): Long =
+    localDate.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000
+
+fun epochMillisecondsToLocalDate(epochMillis: Long): LocalDate =
+    Instant.ofEpochMilli(epochMillis).atOffset(ZoneOffset.UTC).toLocalDate()
 
 fun ClosedRange<LocalDate>.everySunday() = sequence {
     var current = start

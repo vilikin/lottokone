@@ -1,8 +1,9 @@
 package com.example
 
 import io.ktor.http.*
-import kotlin.test.*
 import io.ktor.server.testing.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class ApplicationTest {
     @Test
