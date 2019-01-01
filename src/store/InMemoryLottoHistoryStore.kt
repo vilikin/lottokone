@@ -1,9 +1,9 @@
 package com.example.store
 
-class MockLottoHistoryStore : LottoHistoryStore {
-    val draws: MutableList<Draw> = mutableListOf()
+class InMemoryLottoHistoryStore : LottoHistoryStore {
+    private val draws: MutableList<Draw> = mutableListOf()
 
-    override fun saveDraws(vararg draws: Draw) {
+    override fun saveDraws(draws: List<Draw>) {
         this.draws.addAll(draws)
     }
 

@@ -12,6 +12,7 @@ data class VeikkausResponseRoot(
 )
 
 data class VeikkausResponseDraw(
+    val id: String,
     val drawTime: Long,
     val results: List<VeikkausResponseDrawResults>
 )
@@ -40,6 +41,7 @@ class VeikkausHttpClient {
             success = { responseRoot ->
                 return responseRoot.draws.map { draw ->
                     Draw(
+                        id = draw.id,
                         date = epochMillisecondsToLocalDate(draw.drawTime),
                         primaryNumbers = draw.results.first().primary.map(String::toInt).toSet(),
                         secondaryNumbers = draw.results.first().secondary?.map(String::toInt)?.toSet(),

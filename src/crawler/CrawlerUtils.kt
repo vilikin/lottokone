@@ -8,10 +8,10 @@ fun localDateToEpochMilliseconds(localDate: LocalDate): Long =
 fun epochMillisecondsToLocalDate(epochMillis: Long): LocalDate =
     Instant.ofEpochMilli(epochMillis).atOffset(ZoneOffset.UTC).toLocalDate()
 
-fun ClosedRange<LocalDate>.everySunday() = sequence {
+fun ClosedRange<LocalDate>.getStartAndEndDateAndEverySundayInBetween() = sequence {
     var current = start
     do {
-        if (current.isSunday()) {
+        if (current.isSunday() || current == start || current == endInclusive) {
             yield(current)
         }
 

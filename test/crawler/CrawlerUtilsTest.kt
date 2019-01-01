@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import java.time.LocalDate
 
-@DisplayName("Crawler")
+@DisplayName("CrawlerUtils")
 class CrawlerUtilsTest {
 
     @DisplayName("should get milliseconds of a LocalDate")
@@ -16,13 +16,13 @@ class CrawlerUtilsTest {
         assertEquals(1545523200000, actualMilliseconds)
     }
 
-    @DisplayName("should find every Sunday from range of LocalDates that starts and ends with Sunday")
+    @DisplayName("should find every Sunday (and start and end dates) from range of LocalDates that starts and ends with Sunday")
     @Test
     fun shouldFindEverySundayFromRangeThatStartsAndEndsWithSunday() {
         val startDate = LocalDate.of(2018, 12, 2)
         val endDate = LocalDate.of(2018, 12, 30)
         val range = startDate..endDate
-        val actualListOfSundays = range.everySunday().toList()
+        val actualListOfSundays = range.getStartAndEndDateAndEverySundayInBetween().toList()
 
         val expectedListOfSundays = listOf(
             LocalDate.of(2018, 12, 2),
@@ -35,18 +35,20 @@ class CrawlerUtilsTest {
         assertEquals(expectedListOfSundays, actualListOfSundays)
     }
 
-    @DisplayName("should find every Sunday from range of LocalDates that doesn't start and end with Sunday")
+    @DisplayName("should find every Sunday (and start and end dates) from range of LocalDates that doesn't start and end with Sunday")
     @Test
     fun shouldFindEverySundayFromRangeThatDoesntStartAndEndWithSunday() {
         val startDate = LocalDate.of(2018, 12, 3)
         val endDate = LocalDate.of(2018, 12, 29)
         val range = startDate..endDate
-        val actualListOfSundays = range.everySunday().toList()
+        val actualListOfSundays = range.getStartAndEndDateAndEverySundayInBetween().toList()
 
         val expectedListOfSundays = listOf(
+            LocalDate.of(2018, 12, 3),
             LocalDate.of(2018, 12, 9),
             LocalDate.of(2018, 12, 16),
-            LocalDate.of(2018, 12, 23)
+            LocalDate.of(2018, 12, 23),
+            LocalDate.of(2018, 12, 29)
         )
 
         assertEquals(expectedListOfSundays, actualListOfSundays)

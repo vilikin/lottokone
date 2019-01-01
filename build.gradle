@@ -15,6 +15,10 @@ group 'lottokone'
 version '0.0.1'
 mainClassName = "io.ktor.server.netty.EngineMain"
 
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.6"
+}
+
 sourceSets {
     main.kotlin.srcDirs = main.java.srcDirs = ['src']
     test.kotlin.srcDirs = test.java.srcDirs = ['test']

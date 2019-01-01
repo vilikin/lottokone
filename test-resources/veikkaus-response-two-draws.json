@@ -3,7 +3,7 @@
     {
       "gameName": "LOTTO",
       "brandName": "Lotto",
-      "id": "1511",
+      "id": "1",
       "status": "PAYABLE",
       "openTime": 1545429600000,
       "closeTime": 1546112700000,
@@ -399,7 +399,7 @@
     {
       "gameName": "LOTTO",
       "brandName": "Lotto",
-      "id": "1511",
+      "id": "2",
       "status": "PAYABLE",
       "openTime": 1545429600000,
       "closeTime": 1546112700000,

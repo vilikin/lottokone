@@ -38,6 +38,7 @@ class VeikkausHttpClientTest {
         assertEquals(
             listOf(
                 Draw(
+                    "1",
                     LocalDate.of(2018, 12, 29),
                     setOf(4, 6, 8, 11, 14, 25, 29),
                     setOf(21),
@@ -63,7 +64,7 @@ class VeikkausHttpClientTest {
     }
 
     @Test
-    @DisplayName("shouldn't get any draws when Veikkaus API doesn't return any")
+    @DisplayName("should not get any draws when Veikkaus API doesn't return any")
     fun shouldGetNothing() {
         mockApiResponses(200, mockResponseWithoutDraws)
 
