@@ -2,6 +2,7 @@ package com.example.crawler
 
 import com.example.store.Draw
 import com.example.store.LottoHistoryStore
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 
 const val INITIAL_SCRAPE_FROM = "1971-01-01"
@@ -17,29 +18,30 @@ class Crawler(
         )
     }
 
-    fun scrapeAndSaveDrawsFromPeriod(startDate: LocalDate, endDate: LocalDate) {
+    fun scrapeAndSaveDrawsFromPeriod(startDate: LocalDate, endDate: LocalDate) = runBlocking {
         val period = startDate..endDate
         val dateSequence = period.getStartAndEndDateAndEverySundayInBetween()
+        val datePairsSequence = dateSequence.zipWithNext()
 
-        val allScrapedDraws: MutableList<Draw> = mutableListOf()
+        println("Starting to scrape ${datePairsSequence.count()} periods from Veikkaus API")
 
-        var previousDate: LocalDate = dateSequence.first()
+        val uniqueScrapedDraws: List<Draw> = datePairsSequence.mapIndexed { index, pair ->
+            val draws = veikkausHttpClient.getLottoDrawsBetweenDates(
+                startDate = pair.first,
+                endDate = pair.second
+            )
 
-        for (currentDate in dateSequence) {
-            if (currentDate != previousDate) {
-                val draws = veikkausHttpClient.getLottoDrawsBetweenDates(
-                    startDate = previousDate,
-                    endDate = currentDate
-                )
+            println("Fetched ${draws.size} draws for period #$index")
 
-                allScrapedDraws.addAll(draws)
-            }
-
-            previousDate = currentDate
+            draws
         }
+            .flatten()
+            .distinctBy(Draw::id)
+            .toList()
 
-        val allUniqueScrapedDraws = allScrapedDraws.distinctBy(Draw::id)
-        lottoHistoryStore.saveDraws(allUniqueScrapedDraws)
+        lottoHistoryStore.saveDraws(uniqueScrapedDraws)
+
+        println("Saved a total of ${uniqueScrapedDraws.size} unique draws")
     }
 
     fun getDateToStartScrapingFrom(): LocalDate = lottoHistoryStore.getLatestDraw()

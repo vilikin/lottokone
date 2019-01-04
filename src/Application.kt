@@ -2,10 +2,10 @@ package com.example
 
 import com.example.crawler.Crawler
 import com.example.crawler.VeikkausHttpClient
+import com.example.store.Draw
 import com.example.store.InMemoryLottoHistoryStore
 import io.ktor.application.*
 import io.ktor.response.*
-import io.ktor.request.*
 import io.ktor.routing.*
 import io.ktor.http.*
 import io.ktor.gson.*
@@ -26,8 +26,23 @@ fun Application.module(testing: Boolean = false) {
     }
 
     routing {
-        get("/") {
-            call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
+        get("/api/random-row") {
+            val draws = store.getAllDraws()
+            val allNumbersEver = draws.flatMap(Draw::primaryNumbers)
+
+            val lottoRow: MutableSet<Int> = mutableSetOf()
+
+            for (i in 1..7) {
+                var number: Int
+
+                do {
+                    number = allNumbersEver.random()
+                } while (number in lottoRow)
+
+                lottoRow.add(number)
+            }
+
+            call.respondText(lottoRow.joinToString())
         }
 
         get("/actions/scrape") {
