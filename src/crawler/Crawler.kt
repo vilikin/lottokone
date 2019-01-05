@@ -4,6 +4,7 @@ import com.example.store.Draw
 import com.example.store.LottoHistoryStore
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 const val INITIAL_SCRAPE_FROM = "1971-01-01"
 
@@ -23,7 +24,8 @@ class Crawler(
         val dateSequence = period.getStartAndEndDateAndEverySundayInBetween()
         val datePairsSequence = dateSequence.zipWithNext()
 
-        println("Starting to scrape ${datePairsSequence.count()} periods from Veikkaus API")
+        val datePairsCount = datePairsSequence.count()
+        println("Starting to scrape $datePairsCount periods from Veikkaus API")
 
         val uniqueScrapedDraws: List<Draw> = datePairsSequence.mapIndexed { index, pair ->
             val draws = veikkausHttpClient.getLottoDrawsBetweenDates(
@@ -31,7 +33,7 @@ class Crawler(
                 endDate = pair.second
             )
 
-            println("Fetched ${draws.size} draws for period #$index")
+            printStatus(index + 1, datePairsCount, pair.first.format(DateTimeFormatter.ISO_DATE))
 
             draws
         }
@@ -39,9 +41,21 @@ class Crawler(
             .distinctBy(Draw::id)
             .toList()
 
+        println("Saving a total of ${uniqueScrapedDraws.size} unique draws")
+
         lottoHistoryStore.saveDraws(uniqueScrapedDraws)
 
-        println("Saved a total of ${uniqueScrapedDraws.size} unique draws")
+        println("Scraping and saving completed.")
+    }
+
+    private fun printStatus(current: Int, total: Int, additionalInfo: String) {
+        val status = if (current < total) {
+            "Scraping period $current / $total ($additionalInfo)".padEnd(80, ' ') + "\r"
+        } else {
+            "Scraping done.".padEnd(80, ' ') + "\n"
+        }
+
+        print(status)
     }
 
     fun getDateToStartScrapingFrom(): LocalDate = lottoHistoryStore.getLatestDraw()

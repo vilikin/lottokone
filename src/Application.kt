@@ -4,6 +4,7 @@ import com.example.crawler.Crawler
 import com.example.crawler.VeikkausHttpClient
 import com.example.store.Draw
 import com.example.store.InMemoryLottoHistoryStore
+import com.example.store.PersistedLottoHistoryStore
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -11,7 +12,7 @@ import io.ktor.http.*
 import io.ktor.gson.*
 import io.ktor.features.*
 
-val store = InMemoryLottoHistoryStore()
+val store = PersistedLottoHistoryStore()
 val client = VeikkausHttpClient()
 val crawler = Crawler(store, client)
 
@@ -49,6 +50,10 @@ fun Application.module(testing: Boolean = false) {
             crawler.scrapeAndSaveDrawsSinceLatestSavedDraw()
 
             call.respondText("Scraped successfully", contentType = ContentType.Text.Plain)
+        }
+
+        get("/actions/get-latest") {
+            call.respond(store.getLatestDraw()!!)
         }
 
         get("/json/gson") {
