@@ -1,5 +1,6 @@
 package com.example.store
 
+import com.example.Config
 import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.EntityClass
 import org.jetbrains.exposed.dao.EntityID
@@ -27,10 +28,10 @@ class LottoDrawDAO(id: EntityID<String>): Entity<String>(id) {
 class PersistedLottoHistoryStore : LottoHistoryStore {
     init {
         Database.connect(
-            url = "jdbc:postgresql://localhost:9432/postgres",
+            url = "jdbc:postgresql://${Config.DB_HOST}:${Config.DB_PORT}/${Config.DB_NAME}",
             driver = "org.postgresql.Driver",
-            user = "postgres",
-            password = "postgres"
+            user = Config.DB_USER,
+            password = Config.DB_PASSWORD
         )
 
         transaction {

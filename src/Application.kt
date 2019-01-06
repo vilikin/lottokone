@@ -3,14 +3,17 @@ package com.example
 import com.example.crawler.Crawler
 import com.example.crawler.VeikkausHttpClient
 import com.example.store.Draw
-import com.example.store.InMemoryLottoHistoryStore
 import com.example.store.PersistedLottoHistoryStore
-import io.ktor.application.*
-import io.ktor.response.*
-import io.ktor.routing.*
-import io.ktor.http.*
-import io.ktor.gson.*
-import io.ktor.features.*
+import io.ktor.application.Application
+import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.features.ContentNegotiation
+import io.ktor.gson.gson
+import io.ktor.http.ContentType
+import io.ktor.response.respond
+import io.ktor.response.respondText
+import io.ktor.routing.get
+import io.ktor.routing.routing
 
 val store = PersistedLottoHistoryStore()
 val client = VeikkausHttpClient()

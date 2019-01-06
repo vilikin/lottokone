@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: './Dockerfile'
-    command: 'bash -c "./gradlew run"'
+    command: 'bash -c "source .env.docker && sh ./tools/wait-for-db.sh && ./gradlew run"'
     ports:
       - '8080:8080'
     working_dir: '/app'
@@ -18,7 +18,7 @@ services:
   postgres:
     image: postgres:11
     ports:
-      - '9432:5432'
+      - '5432:5432'
     environment:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
