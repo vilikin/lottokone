@@ -11,6 +11,10 @@ import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
 import io.ktor.gson.gson
 import io.ktor.http.ContentType
+import io.ktor.http.content.default
+import io.ktor.http.content.file
+import io.ktor.http.content.files
+import io.ktor.http.content.static
 import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.get
@@ -40,6 +44,11 @@ fun Application.module(testing: Boolean = false) {
             crawler.scrapeAndSaveDrawsSinceLatestSavedDraw()
 
             call.respondText("Scraped successfully", contentType = ContentType.Text.Plain)
+        }
+
+        static("/") {
+            files("static")
+            default("static/index.html")
         }
     }
 }
