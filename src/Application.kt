@@ -2,6 +2,7 @@ package com.example
 
 import com.example.crawler.Crawler
 import com.example.crawler.VeikkausHttpClient
+import com.example.engine.LottoEngine
 import com.example.store.Draw
 import com.example.store.PersistedLottoHistoryStore
 import io.ktor.application.Application
@@ -18,6 +19,7 @@ import io.ktor.routing.routing
 val store = PersistedLottoHistoryStore()
 val client = VeikkausHttpClient()
 val crawler = Crawler(store, client)
+val engine = LottoEngine(store)
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -30,37 +32,14 @@ fun Application.module(testing: Boolean = false) {
     }
 
     routing {
-        get("/api/random-row") {
-            val draws = store.getAllDraws()
-            val allNumbersEver = draws.flatMap(Draw::primaryNumbers)
-
-            val lottoRow: MutableSet<Int> = mutableSetOf()
-
-            for (i in 1..7) {
-                var number: Int
-
-                do {
-                    number = allNumbersEver.random()
-                } while (number in lottoRow)
-
-                lottoRow.add(number)
-            }
-
-            call.respondText(lottoRow.joinToString())
+        get("/api/row") {
+            call.respond(engine.getRandomRow())
         }
 
         get("/actions/scrape") {
             crawler.scrapeAndSaveDrawsSinceLatestSavedDraw()
 
             call.respondText("Scraped successfully", contentType = ContentType.Text.Plain)
-        }
-
-        get("/actions/get-latest") {
-            call.respond(store.getLatestDraw()!!)
-        }
-
-        get("/json/gson") {
-            call.respond(mapOf("hello" to "world"))
         }
     }
 }
