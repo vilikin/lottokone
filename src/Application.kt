@@ -3,7 +3,6 @@ package com.example
 import com.example.crawler.Crawler
 import com.example.crawler.VeikkausHttpClient
 import com.example.engine.LottoEngine
-import com.example.store.Draw
 import com.example.store.PersistedLottoHistoryStore
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -12,7 +11,6 @@ import io.ktor.features.ContentNegotiation
 import io.ktor.gson.gson
 import io.ktor.http.ContentType
 import io.ktor.http.content.default
-import io.ktor.http.content.file
 import io.ktor.http.content.files
 import io.ktor.http.content.static
 import io.ktor.response.respond
@@ -44,6 +42,16 @@ fun Application.module(testing: Boolean = false) {
             crawler.scrapeAndSaveDrawsSinceLatestSavedDraw()
 
             call.respondText("Scraped successfully", contentType = ContentType.Text.Plain)
+        }
+
+        get("/api/stats") {
+            val map = store.getAllDraws()
+                .filter { it.primaryNumbers.size == 7 }
+                .flatMap { it.primaryNumbers }
+                .groupingBy { it }
+                .eachCount()
+
+            call.respond(map)
         }
 
         static("/") {
