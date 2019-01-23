@@ -1,0 +1,35 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: orange;
+    color: white;
+    font-family: Lobster, cursive;
+    text-align: center;
+}
+
+h1 {
+    font-size: 4em;
+    text-shadow: 2px 2px 4px black;
+    margin-bottom: 20px;
+}
+
+.lotto-row {
+    font-size: 3em;
+    text-shadow: 2px 2px 4px black;
+    margin-bottom: 20px;
+}
+
+.lotto-button {
+    font-size: 2em;
+    cursor: pointer;
+    color: white;
+    background-color: orange;
+    border: 3px solid white;
+    padding: 10px 20px;
+    font-family: Lobster, cursive;
+    border-radius: 10px;
+}
+
+.lotto-button:hover {
+    background-color: darkorange;
+}
